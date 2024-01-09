@@ -1,4 +1,5 @@
 venv/
+pyrightconfig.json
 .DS_Store
 .idea/
 *.pyc
