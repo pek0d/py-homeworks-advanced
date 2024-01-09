@@ -1,8 +1,8 @@
 venv/
-pyrightconfig.json
 .DS_Store
 .idea/
 *.pyc
 *.swp
 *.swo
 *.ipynb_checkpoints
+pyrightconfig.json
