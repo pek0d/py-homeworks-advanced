@@ -13,13 +13,13 @@ def process_contacts(contacts_list) -> None:
     """Функция для обработки списка контактов"""
     for contact in contacts_list:
         name = contact[0]
-        name_parts = " ".join(name.split()[:2]).split(" ")
+        name_parts = name.split(" ")
         if len(name_parts) > 0:
             contact[0] = name_parts[0]  # Last name
         if len(name_parts) > 1:
             contact[1] = name_parts[1]  # First name
         if len(name_parts) > 2:
-            contact[2] = name_parts[2]  # Surname
+            contact[2] = " ".join(name_parts[2:])  # Surname
 
 
 def remove_duplicates(contacts_list) -> list:
