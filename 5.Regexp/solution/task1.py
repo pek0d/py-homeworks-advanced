@@ -9,18 +9,20 @@ with open("../phonebook_raw.csv", encoding="utf-8") as f:
 # pprint(contacts_list)
 
 
-def process_contacts(contacts_list) -> None:
+def process_contacts(names_list) -> None:
     """Функция для обработки списка контактов"""
 
-    for contact in contacts_list:
-        name = contact[0]
-        name_parts = name.split(" ")
-        if len(name_parts) > 0:
-            contact[0] = name_parts[0]  # Last name
-        if len(name_parts) > 1:
-            contact[1] = name_parts[1]  # First name
-        if len(name_parts) > 2:
-            contact[2] = " ".join(name_parts[2:])  # Surname
+    for contact in names_list:
+        name = contact.split()
+        print(name)
+        # name_parts = name.split(" ")
+        if len(name) > 0:
+            names_list[0] = name[0]  # Last name
+        if len(name) > 1:
+            names_list[1] = name[1]  # First name
+        if len(name) > 2:
+            names_list[2] = " ".join(name[2:])  # Surname
+    return names_list
 
 
 def split_name(names_list) -> list:
@@ -52,11 +54,21 @@ def remove_duplicates(contacts_list) -> list:
     return cleaned_contacts
 
 
-for row in contacts_list:
-    row[:3] = process_contacts(row[:3])
-
 # Обработка контактов
-process_contacts(contacts_list)
+# process_contacts(contacts_list)
+def extract_names(contacts_list) -> list:
+    """Функция для извлечения имен из списка контактов"""
+    for row in contacts_list:
+        row[:3] = process_contacts(row[:3])
+        row[3:] = split_name(row[3:])
+
+    return contacts_list
+
+
+# for row in contacts_list:
+#     # print(process_contacts(row[:3]))
+#     print(split_name(row[:3]))
+
 cleaned_contacts = remove_duplicates(contacts_list)  # Удаление дублирующихся контактов
 
 
@@ -68,4 +80,5 @@ def write_cleaned_contacts(cleaned_contacts) -> None:
 
 
 if __name__ == "__main__":
+    extract_names(contacts_list)
     write_cleaned_contacts(cleaned_contacts)
