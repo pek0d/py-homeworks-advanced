@@ -6,11 +6,12 @@ with open("../phonebook_raw.csv", encoding="utf-8") as f:
     rows = csv.reader(f, delimiter=",")
     contacts_list = list(rows)
 
-pprint(contacts_list)
+# pprint(contacts_list)
 
 
 def process_contacts(contacts_list) -> None:
     """Функция для обработки списка контактов"""
+
     for contact in contacts_list:
         name = contact[0]
         name_parts = name.split(" ")
@@ -22,8 +23,23 @@ def process_contacts(contacts_list) -> None:
             contact[2] = " ".join(name_parts[2:])  # Surname
 
 
+def split_name(names_list) -> list:
+    """Функция для разделения полного имени на отчество, имя и фамилию"""
+
+    full_name = ["", "", ""]
+    start = 0
+    for name in names_list:
+        if name:
+            name = name.split()
+            stop = len(name)
+            full_name[start : start + stop] = name
+            start += stop
+    return full_name
+
+
 def remove_duplicates(contacts_list) -> list:
     """Удаление дублирующихся контактов"""
+
     cleaned_contacts = []
     seen_names = set()
 
@@ -35,6 +51,9 @@ def remove_duplicates(contacts_list) -> list:
 
     return cleaned_contacts
 
+
+for row in contacts_list:
+    row[:3] = process_contacts(row[:3])
 
 # Обработка контактов
 process_contacts(contacts_list)
