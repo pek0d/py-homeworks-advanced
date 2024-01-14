@@ -6,7 +6,7 @@ with open("../phonebook_raw.csv", encoding="utf-8") as f:
     rows = csv.reader(f, delimiter=",")
     contacts_list = list(rows)
 
-pprint(contacts_list)
+# pprint(contacts_list)
 
 
 def process_contacts(contact) -> None:
@@ -43,22 +43,26 @@ def extract_names(contacts_list) -> list:
     return contacts_list
 
 
-def remove_duplicates(contacts_list) -> list:
+def remove_duplicates(contacts_list):
     """Удаление дублирующихся контактов"""
-
+    seen_names = {}
     cleaned_contacts = []
-    seen_names = set()
 
     for contact in contacts_list:
-        name = (contact[0], contact[1])
+        name = (
+            contact[0],
+            contact[1],
+        )  # Создаем кортеж (имя, фамилия) для использования в качестве ключа в словаре
         if name not in seen_names:
-            cleaned_contacts.append(contact)
-            seen_names.add(name)
+            seen_names[name] = True  # Добавляем комбинацию (имя, фамилия) в словарь
+            cleaned_contacts.append(
+                contact
+            )  # Добавляем контакт в список обновленных контактов
+
+        else:
+            print(f"Duplicate found: {contact[0]} {contact[1]}")
 
     return cleaned_contacts
-
-
-cleaned_contacts = remove_duplicates(contacts_list)  # Удаление дублирующихся контактов
 
 
 def write_cleaned_contacts(cleaned_contacts) -> None:
