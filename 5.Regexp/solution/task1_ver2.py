@@ -1,10 +1,15 @@
 import csv
+import re
 from pprint import pprint
 
+
 # читаем адресную книгу в формате CSV в список contacts_list
-with open("../phonebook_raw.csv", encoding="utf-8") as f:
-    rows = csv.reader(f, delimiter=",")
-    contacts_list = list(rows)
+def read_csv():
+    with open("../phonebook_raw.csv") as f:
+        rows = csv.reader(f, delimiter=",")
+        contacts_list = list(rows)
+    return contacts_list
+
 
 # pprint(contacts_list)
 
@@ -43,24 +48,24 @@ def extract_names(contacts_list) -> list:
     return contacts_list
 
 
-def remove_duplicates(contacts_list):
-    """Удаление дублирующихся контактов"""
-    seen_names = {}
+def remove_duplicates(contacts_list) -> list:
+    """Удаление дублирующихся контактов и форматирование телефонных номеров"""
+    seen_names = set()
     cleaned_contacts = []
 
     for contact in contacts_list:
         name = (
             contact[0],
             contact[1],
-        )  # Создаем кортеж (имя, фамилия) для использования в качестве ключа в словаре
+        )  # Создаем кортеж (имя, фамилия) для использования в качестве ключа
         if name not in seen_names:
-            seen_names[name] = True  # Добавляем комбинацию (имя, фамилия) в словарь
+            seen_names.add(
+                name
+            )  # Добавляем комбинацию (имя, фамилия) в множество уже увиденных имен
+
             cleaned_contacts.append(
                 contact
             )  # Добавляем контакт в список обновленных контактов
-
-        else:
-            print(f"Duplicate found: {contact[0]} {contact[1]}")
 
     return cleaned_contacts
 
@@ -73,6 +78,7 @@ def write_cleaned_contacts(cleaned_contacts) -> None:
 
 
 if __name__ == "__main__":
+    contacts_list = read_csv()
     extract_names(contacts_list)
     cleaned_contacts = remove_duplicates(contacts_list)
     write_cleaned_contacts(cleaned_contacts)
