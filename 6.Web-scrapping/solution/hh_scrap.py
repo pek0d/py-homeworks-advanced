@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # URL, который нужно запросить
-url = "https://spb.hh.ru/search/vacancy?text=python&area=1&area=2"
+url = "https://spb.hh.ru/search/vacancy?text=python+django+flask&area=1&area=2"
 
 # Заголовки (Headers)
 headers = {
@@ -20,25 +20,21 @@ if response.status_code == 200:
     soup = BeautifulSoup(response.content, "html.parser")
 
     # Находим все вакансии
-    vacancies = soup.find_all("div", class_="vacancy-serp-item")
+    vacancies = soup.find_all("div", class_="vacancy-serp-item__layout")
 
     results = []
     for vacancy in vacancies:
-        title = vacancy.find("a", class_="bloko-link HH-LinkModifier").text
-        company = vacancy.find("a", class_="bloko-link bloko-link_secondary").text
-        city = vacancy.find("span", class_="vacancy-serp-item__meta-info").text
-        salary = vacancy.find("div", class_="vacancy-serp-item__compensation")
-        vacancy_link = vacancy.find("a", class_="bloko-link HH-LinkModifier")["href"]
-        description = vacancy.find("div", class_="g-user-content").get_text()
+        title = vacancy.find("span", class_="serp-item__title")
+        company = vacancy.find("a", class_="bloko-link bloko-link_kind-tertiary")[
+            "href"
+        ]
+        city = vacancy.find("div", class_="vacancy-serp__vacancy-address")
+        salary = vacancy.find("span", class_="vacancy-serp-item__compensation")
+        vacancy_link = vacancy.find("a", class_="oko-link")
+        description = vacancy.find("div", class_="g-user-content")
 
-        # Проверяем наличие ключевых слов в описании
-        if (
-            "Django" in description
-            and "Flask" in description
-            and (
-                re.search(r"\bUSD\b", str(salary))
-                or re.search(r"dollar", str(salary), re.IGNORECASE)
-            )
+        if re.search(r"\bUSD\b", str(salary)) or re.search(
+            r"dollar", str(salary), re.IGNORECASE
         ):
             results.append(
                 {
