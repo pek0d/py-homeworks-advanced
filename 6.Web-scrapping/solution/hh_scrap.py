@@ -9,6 +9,7 @@ headers = {
     "Chrome/91.0.4472.124 Safari/537.36"
 }
 
+results = []
 for page in range(10):
     url = f"https://spb.hh.ru/search/vacancy?text=python+django+flask&area=1&area=2&page={page}"
 
@@ -19,7 +20,6 @@ for page in range(10):
 
         vacancies = soup.find_all("div", class_="vacancy-serp-item__layout")
 
-        results = []
         for vacancy in vacancies:
             company = vacancy.find(
                 "a", {"data-qa": "vacancy-serp__vacancy-employer"}
@@ -37,17 +37,17 @@ for page in range(10):
 
             link = vacancy.find("a", class_="bloko-link")["href"]
 
-            if re.search(r"\bUSD\b", str(salary)) or re.search(
-                r"dollar", str(salary), re.IGNORECASE
-            ):
-                results.append(
-                    {
-                        "company": company,
-                        "city": city,
-                        "salary": salary,
-                        "link": link,
-                    }
-                )
+            # if re.search(r"\bUSD\b", str(salary)) or re.search(
+            #     r"dollar", str(salary), re.IGNORECASE
+            # ):
+            results.append(
+                {
+                    "company": company,
+                    "city": city,
+                    "salary": salary,
+                    "link": link,
+                }
+            )
 
-        with open("vacancies_filtered.json", "w", encoding="utf-8") as f:
-            json.dump(results, f, ensure_ascii=False, indent=4)
+with open("vacancies_filtered.json", "w", encoding="utf-8") as f:
+    json.dump(results, f, ensure_ascii=False, indent=4)
