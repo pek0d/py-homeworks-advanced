@@ -24,14 +24,18 @@ if response.status_code == 200:
 
     results = []
     for vacancy in vacancies:
-        title = vacancy.find("span", class_="serp-item__title")
-        company = vacancy.find("a", class_="bloko-link bloko-link_kind-tertiary")[
-            "href"
-        ]
-        city = vacancy.find("div", class_="vacancy-serp__vacancy-address")
-        salary = vacancy.find("span", class_="vacancy-serp-item__compensation")
-        vacancy_link = vacancy.find("a", class_="oko-link")
-        description = vacancy.find("div", class_="g-user-content")
+        title = vacancy.find("span", class_="serp-item__title").text
+        company = vacancy.find("a", {"data-qa": "vacancy-serp__vacancy-employer"}).text
+        address = vacancy.find("div", {"data-qa": "vacancy-serp__vacancy-address"}).text
+        city = address.split(",")[0]
+
+        salary_element = (
+            "span",
+            {"data-qa": "vacancy-serp__vacancy-compensation"},
+        )
+        salary = salary_element.text if salary_element else print("не указано")
+
+        link = vacancy.find("a", class_="bloko-link")["href"]
 
         if re.search(r"\bUSD\b", str(salary)) or re.search(
             r"dollar", str(salary), re.IGNORECASE
@@ -42,7 +46,7 @@ if response.status_code == 200:
                     "company": company,
                     "city": city,
                     "salary": str(salary.text.strip()) if salary else None,
-                    "link": vacancy_link,
+                    "link": link,
                 }
             )
 
