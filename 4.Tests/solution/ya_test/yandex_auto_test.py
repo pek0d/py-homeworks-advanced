@@ -14,7 +14,7 @@ class TestYandexDiskAPI(unittest.TestCase):
     @pysnooper.snoop()
     def test_create_folder_success(self):
         folder_name = "TestFolder"
-        create_folder_url = f"{self.folder_url}?path=/app/{folder_name}"
+        create_folder_url = f"{self.folder_url}?path={folder_name}"
 
         # Make a POST request to create a folder
         response = requests.put(create_folder_url, headers=self.headers)
